@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>PSTI人格测试 · 梦境礼物</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background: linear-gradient(145deg, #eef2ff 0%, #e0e9ff 100%);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1.5rem;
+    color: #1e293b;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 20% 40%, rgba(255,245,215,0.3) 0%, rgba(210,230,255,0) 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    display: none;
+    max-width: 680px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(2px);
+    border-radius: 2.5rem;
+    box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.25), 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 2.2rem 2rem 2.5rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    position: relative;
+    z-index: 2;
+  }
+
+  .active {
+    display: block;
+    animation: fadeSlideUp 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+  }
+
+  @keyframes fadeSlideUp {
+    0% { opacity: 0; transform: translateY(18px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  .progress {
+    width: 100%;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 20px;
+    margin-bottom: 2rem;
+    overflow: hidden;
+  }
+
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #6c9eff, #a0c1ff);
+    width: 0%;
+    transition: width 0.4s ease-out;
+  }
+
+  .question-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #5b6e8c;
+  }
+
+  .q-counter {
+    background: #eef2ff;
+    padding: 0.2rem 0.8rem;
+    border-radius: 40px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #2c3e66;
+  }
+
+  .question {
+    font-size: 1.85rem;
+    font-weight: 700;
+    line-height: 1.35;
+    margin-bottom: 2rem;
+    background: linear-gradient(135deg, #1f3b4c, #2c5a7a);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    align-items: stretch;
+    margin-top: 0.5rem;
+  }
+
+  .options .btn {
+    text-align: center;
+    background: #ffffff;
+    border: 1px solid #dce5f2;
+    color: #1e3a5f;
+    font-weight: 500;
+    padding: 1rem 1.2rem;
+    border-radius: 1.8rem;
+    font-size: 1rem;
+    transition: all 0.25s ease;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  .options .btn:hover {
+    transform: translateY(-2px);
+    background: #f9fcff;
+    border-color: #9bb6e5;
+    box-shadow: 0 12px 20px -12px rgba(70, 110, 180, 0.3);
+  }
+
+  .btn {
+    padding: 0.9rem 2rem;
+    background: linear-gradient(105deg, #6c8eff, #7f9eff);
+    color: white;
+    border: none;
+    border-radius: 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s;
+    box-shadow: 0 6px 14px rgba(100, 120, 230, 0.25);
+  }
+
+  .btn:hover {
+    background: linear-gradient(105deg, #5a7be6, #6c8eff);
+    transform: scale(0.98);
+  }
+
+  .title {
+    font-size: 3.2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #1f3b4c, #2c5a7a, #4f6f9f);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    margin-bottom: 1rem;
+  }
+
+  .sub {
+    color: #5c6f8f;
+    margin-bottom: 2.5rem;
+    font-size: 0.95rem;
+    border-top: 1px solid #dce3ef;
+    display: inline-block;
+    padding-top: 0.6rem;
+  }
+
+  .animate-text {
+    font-size: 4.2rem;
+    font-weight: 800;
+    text-align: center;
+    margin: 2rem 0;
+    background: linear-gradient(125deg, #497dbe, #b28eff, #4f93ff);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: gentleGlow 1.8s infinite alternate;
+  }
+
+  @keyframes gentleGlow {
+    0% { text-shadow: 0 0 0px rgba(100, 130, 240, 0.2); }
+    100% { text-shadow: 0 0 12px rgba(100, 140, 255, 0.4); }
+  }
+
+  .content {
+    font-size: 1.08rem;
+    line-height: 1.75;
+    white-space: pre-line;
+    background: #fafdff;
+    padding: 1.8rem;
+    border-radius: 1.8rem;
+    margin: 1rem 0;
+    border: 1px solid #e9edf4;
+    color: #1f3c4f;
+  }
+
+  .small {
+    font-size: 0.85rem;
+    color: #8b9ab0;
+    margin-top: 0.8rem;
+    padding-left: 0.5rem;
+    border-left: 3px solid #9bb6e5;
+  }
+
+  #finalContent {
+    background: #fffef7;
+    border-left: 5px solid #6c8eff;
+  }
+
+  .reset-link {
+    margin-top: 2rem;
+    text-align: center;
+  }
+
+  .reset-btn {
+    background: none;
+    border: 1px solid #cbdbe0;
+    color: #5c6f8a;
+    padding: 0.5rem 1.5rem;
+    font-size: 0.8rem;
+    border-radius: 40px;
+    cursor: pointer;
+    background: rgba(255,255,240,0.7);
+  }
+
+  .reset-btn:hover {
+    background: #eef3ff;
+    border-color: #8ba5d0;
+  }
+
+  #openBtn {
+    background: linear-gradient(120deg, #f7b787, #ff9f6e);
+    box-shadow: 0 12px 20px -8px rgba(255, 140, 70, 0.4);
+  }
+
+  @media (max-width: 550px) {
+    .page { padding: 1.8rem 1.5rem; }
+    .title { font-size: 2.5rem; }
+    .question { font-size: 1.5rem; }
+    .animate-text { font-size: 2.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 欢迎页 -->
+<div class="page active" id="welcome">
+  <div class="title">PSTI人格测试</div>
+  <div class="sub">· 梦境编织 · 一份来自未来的礼物</div>
+  <button class="btn" id="startBtn">✨ 开启旅程 ✨</button>
+</div>
+
+<!-- 答题页 -->
+<div class="page" id="quiz">
+  <div class="progress"><div class="progress-bar" id="bar"></div></div>
+  <div class="question-meta">
+    <span class="q-counter" id="qCounter">第1 / 6题</span>
+    <span>🌙 直觉选择</span>
+  </div>
+  <div class="question" id="q"></div>
+  <div class="options" id="opts"></div>
+</div>
+
+<!-- 动画页 -->
+<div class="page" id="animate">
+  <div class="animate-text" id="at">PSTI</div>
+  <button class="btn" id="openBtn" style="display:none">✨ 拆礼物吧 ✨</button>
+  <div style="margin-top: 30px; font-size: 0.8rem; color:#7c8ba0;">正在为你酝酿宇宙级浪漫 ...</div>
+</div>
+
+<!-- 寄语页 -->
+<div class="page" id="message">
+  <div class="content" id="msgContent"></div>
+  <div class="small" id="msgTip"></div>
+  <div style="margin-top: 30px"><button class="btn" id="toFinalBtn">✦ 继续旅程 ✦</button></div>
+</div>
+
+<!-- 最终结果页 -->
+<div class="page" id="final">
+  <div class="content" id="finalContent"></div>
+  <div class="reset-link"><button class="reset-btn" id="resetBtn">🔄 重新测试</button></div>
+</div>
+
+<script>
+  // 等待页面完全加载后再执行脚本
+  document.addEventListener('DOMContentLoaded', function() {
+    // 题库
+    const questions = [
+      {q:"今天过得好吗？",opt:["爽哉爽哉！","一如既往。","并不。"]},
+      {q:"你或许想要什么？",opt:["我想挣脱。","我想得到。","我想爱。","我想被爱。"]},
+      {q:"或许需要什么？",opt:["勇气","自由","Passion！","现在立刻马上！谁帮我完成deadline！","家产在我面前酱酱酿酿......（淫笑）"]},
+      {q:"或许愿意做点什么？",opt:["看点什么？","听点什么？","读点什么？"]},
+      {q:"或许，呃，需要一台时光机？",opt:["那就试试回到过去吧！","我并不讨厌现在。","我确实好奇，未来会变好吗？"]},
+      {q:"所以PSTI是什么？",opt:["Photoshop人格测试。","postscript人格测试。","索尼游戏主机人格测试。","朋友发我链接我就点进来了......所以是什么？"]}
+    ];
+
+    let cur = 0;
+    let ans = [];
+    let animTimeouts = [];
+
+    // 缓存所有DOM元素（避免重复获取）
+    const dom = {
+      welcome: document.getElementById('welcome'),
+      quiz: document.getElementById('quiz'),
+      animate: document.getElementById('animate'),
+      message: document.getElementById('message'),
+      final: document.getElementById('final'),
+      bar: document.getElementById('bar'),
+      qCounter: document.getElementById('qCounter'),
+      q: document.getElementById('q'),
+      opts: document.getElementById('opts'),
+      at: document.getElementById('at'),
+      openBtn: document.getElementById('openBtn'),
+      msgContent: document.getElementById('msgContent'),
+      msgTip: document.getElementById('msgTip'),
+      finalContent: document.getElementById('finalContent'),
+      startBtn: document.getElementById('startBtn'),
+      toFinalBtn: document.getElementById('toFinalBtn'),
+      resetBtn: document.getElementById('resetBtn')
+    };
+
+    // 验证核心元素是否存在
+    const missingElements = Object.entries(dom).filter(([key, el]) => !el).map(([key]) => key);
+    if (missingElements.length > 0) {
+      console.error('缺失核心DOM元素：', missingElements);
+      alert('页面加载异常，缺失核心元素：' + missingElements.join(', '));
+      return;
+    }
+
+    // 清理计时器
+    function clearAnimTimeouts() {
+      animTimeouts.forEach(t => clearTimeout(t));
+      animTimeouts = [];
+    }
+
+    // 重置所有
+    function fullReset() {
+      console.log("fullReset called");
+      clearAnimTimeouts();
+      cur = 0;
+      ans = [];
+      // 隐藏所有页面
+      [dom.welcome, dom.quiz, dom.animate, dom.message, dom.final].forEach(p => p.classList.remove('active'));
+      // 显示欢迎页
+      dom.welcome.classList.add('active');
+      dom.at.innerText = 'PSTI';
+      dom.openBtn.style.display = 'none';
+      dom.bar.style.width = '0%';
+    }
+
+    // 加载题目
+    function loadQuestion() {
+      if (cur >= questions.length) {
+        ani();
+        return;
+      }
+      const d = questions[cur];
+      dom.q.innerText = d.q;
+      dom.opts.innerHTML = '';
+      dom.qCounter.innerText = `第${cur+1} / ${questions.length}题`;
+      
+      d.opt.forEach((text, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'btn';
+        btn.innerText = text;
+        btn.onclick = () => {
+          ans.push(idx);
+          cur++;
+          if (cur < questions.length) loadQuestion();
+          else ani();
+        };
+        dom.opts.appendChild(btn);
+      });
+      
+      const percent = ((cur + 1) / questions.length) * 100;
+      dom.bar.style.width = percent + '%';
+    }
+
+    // 开始测试
+    function startPSTI() {
+      console.log("startPSTI called");
+      clearAnimTimeouts();
+      cur = 0;
+      ans = [];
+      // 切换页面
+      dom.welcome.classList.remove('active');
+      dom.quiz.classList.add('active');
+      dom.at.innerText = 'PSTI';
+      dom.openBtn.style.display = 'none';
+      dom.bar.style.width = '0%';
+      loadQuestion();
+    }
+
+    // 动画
+    function ani() {
+      dom.quiz.classList.remove('active');
+      dom.animate.classList.add('active');
+      dom.at.innerText = 'PSTI';
+      clearAnimTimeouts();
+      
+      const t1 = setTimeout(() => { dom.at.innerText = 'PRESENTI'; }, 800);
+      const t2 = setTimeout(() => {
+        dom.at.innerText = 'PRESENT';
+        dom.at.style.fontWeight = 'bold';
+        dom.openBtn.style.display = 'inline-block';
+      }, 1800);
+      
+      animTimeouts = [t1, t2];
+    }
+
+    // 生日计算
+    function getAge() {
+      const birth = new Date(2004, 3, 17);
+      const now = new Date();
+      let diff = now - birth;
+      const second = 1000, minute = second * 60, hour = minute * 60, day = hour * 24;
+      const month = day * 30.4375, year = day * 365.25;
+      let y = Math.floor(diff / year); diff %= year;
+      let m = Math.floor(diff / month); diff %= month;
+      let d = Math.floor(diff / day); diff %= day;
+      let h = Math.floor(diff / hour); diff %= hour;
+      let mi = Math.floor(diff / minute); diff %= minute;
+      let s = Math.floor(diff / second);
+      return `${y}岁零${m}个月${d}天${h}小时${mi}分${s}秒`;
+    }
+
+    // 寄语
+    function toMessage() {
+      console.log("toMessage called");
+      clearAnimTimeouts();
+      dom.animate.classList.remove('active');
+      dom.message.classList.add('active');
+      
+      const ageText = getAge();
+      const q3 = ans[2];
+      let content = `我绞尽脑汁想出这份生日礼物，我是不是宇宙第一浪漫？！
+
+天南海北，就是一抬腿的距离，那空间不是问题，或许时间也不是？
+
+我想啊想啊，我是个擅长做梦的人，那为什么不送你一些梦呢？
+
+祝${ageText}的晓光浮野
+生活着的每一日，都要快乐！`;
+      let tip = '';
+      if (q3 === 3) tip = '还“现在立刻马上帮我完成deadline”，你在向谁求助，syx吗？所托非人啊。';
+      if (q3 === 4) tip = '祝家产99。';
+      
+      dom.msgContent.innerText = content;
+      dom.msgTip.innerText = tip;
+    }
+
+    // 最终结果
+    function toFinal() {
+      console.log("toFinal called");
+      dom.message.classList.remove('active');
+      dom.final.classList.add('active');
+      
+      const q2 = ans[1], q3 = ans[2], q4 = ans[3], q5 = ans[4];
+      if (q2 === 3) {
+        dom.finalContent.innerText = `此人没有设计【我想被爱】通往的分支结局。
+因为我明明一直在这儿，你怎么会不被爱呢！
+Trick Question罢了！
+
+如有异议，请致电13621776670，我好好说道说道你。`;
+        return;
+      }
+      
+      let type = '';
+      if (q5 === 0) type = 'high';
+      else {
+        if (q4 === 0) type = 'drama';
+        if (q4 === 1) type = 'music';
+        if (q4 === 2) type = 'book';
+      }
+      
+      let txt = '';
+      if (type === 'high') {
+        if (q3 === 0) {
+          if (q2 === 0) txt = '回忆（分支1）';
+          if (q2 === 1) txt = '得到勇气';
+          if (q2 === 2) txt = '爱勇气';
+        }
+        if (q3 === 1) {
+          if (q2 === 0) txt = '回忆（分支2）';
+          if (q2 === 1) txt = '得到自由';
+          if (q2 === 2) txt = '爱自由';
+        }
+        if (q3 === 2) {
+          if (q2 === 0) txt = '回忆（分支3）';
+          if (q2 === 1) txt = '得到passion';
+          if (q2 === 2) txt = '爱passion';
+        }
+      }
+      if (type === 'drama') {
+        if (q3 === 0) {
+          if (q2 === 0) txt = '话剧：别怕，我要带你走。在池沼上面，在幽谷上面，越过山和森林，越过云和大海，越过太阳那边，越过轻云之外，越过星空世界的无涯极限，凌驾于生活之上。';
+          if (q2 === 1) txt = '话剧：忘掉是一般人能做的唯一的事，可是，我决定不忘掉她。';
+          if (q2 === 2) txt = '话剧：上天会厚待那些勇敢的，坚强的，多情的人。';
+        }
+        if (q3 === 1) {
+          if (q2 === 0) txt = '喜剧：快乐而不是胜利的真理，将被传播至永恒。';
+          if (q2 === 1) txt = '喜剧：我不追求赢，也不追求输，不追求快乐，更不追求哭。';
+          if (q2 === 2) txt = '明星大侦探：或许是有不开心做底色，快乐才足够亮眼。';
+        }
+        if (q3 === 2) {
+          if (q2 === 0) txt = '喜剧：成功是一时的，但失败和平凡是我们生命的主旋律。';
+          if (q2 === 1) txt = '明星大侦探：出发不只是为了到达，路途虽曲折漫长，但也处处美好。';
+          if (q2 === 2) txt = '喜剧：用真心就可以吗？！';
+        }
+      }
+      if (type === 'music') {
+        if (q3 === 0) {
+          if (q2 === 0) txt = '音乐剧：就算世界是牢笼，至少我还有权力做梦。';
+          if (q2 === 1) txt = '音乐剧：I see a new day is coming.';
+          if (q2 === 2) txt = '音乐剧：谁说天上的地上的水与火不可能相见呢相爱呢？';
+        }
+        if (q3 === 1) {
+          if (q2 === 0) txt = '毛不易：在路上的人总是一个样，一步一响踏着迷惘，和自己较真磨不灭的倔强。';
+          if (q2 === 1) txt = '毛不易：我和你一样，借着微弱的光，也寻找方向。';
+          if (q2 === 2) txt = '毛不易：从南到北，来了又去，从东到西，忙忙碌碌。我怀揣梦想，我背着爱情，我跌跌撞撞。';
+        }
+        if (q3 === 2) {
+          if (q2 === 0) txt = '毛不易：我热爱布满荆棘的生命，看平凡闪烁出奇迹。';
+          if (q2 === 1) txt = '音乐剧：相信迷人的追光一定会为我而照亮。';
+          if (q2 === 2) txt = '音乐剧：就算世界是牢笼，至少我还有权力做梦。';
+        }
+      }
+      if (type === 'book') {
+        if (q3 === 0) {
+          if (q2 === 0) txt = '史铁生：神的完美在于仁慈，仁慈在于，只要你往前走，他总是给路。在神的字典里，行与路共用一种解释。';
+          if (q2 === 1) txt = '史铁生：但是太阳，它每时每刻都是夕阳也都是旭日。';
+          if (q2 === 2) txt = '哈利波特：Do not pity the dead, Harry. Pity the living, and, above all those who live without love. —— Albus Dumbledore';
+        }
+        if (q3 === 1) {
+          if (q2 === 0) txt = '哈利波特：True power does not lie in controlling others, but in knowing when to let them go. —— Albus Dumbledore';
+          if (q2 === 1) txt = '史铁生：我微笑着唱生活的歌谣，倘若生命只求得两点一线的一帆风顺，那生命便也失去了它的意义。';
+          if (q2 === 2) txt = '史铁生：我经由光阴，经由山水，经由乡村和城市……那路途中的一切，有些与我擦肩而过从此天各一方，有些便永久驻进我的心魂，雕琢我，塑造我，锤炼我，融入我而成为我。';
+        }
+        if (q3 === 2) {
+          if (q2 === 0) txt = '哈利波特：I am what I am, an\' I\'m not ashamed. —— Hagrid';
+          if (q2 === 1) txt = '史铁生：梦想使你迷醉，距离就成了欢乐；追求使你充实，失败和成功都是伴奏；当生命以美的形式证明其价值的时候，幸福是享受，痛苦也是享受。';
+          if (q2 === 2) txt = '史铁生：人活着，必要有一个最美的梦想。';
+        }
+      }
+      if (!txt) txt = '星尘编织，梦境回响，你是独一无二的存在。';
+      dom.finalContent.innerText = txt;
+    }
+
+    // 绑定所有按钮事件（替代内联onclick，更稳定）
+    dom.startBtn.addEventListener('click', startPSTI);
+    dom.openBtn.addEventListener('click', toMessage);
+    dom.toFinalBtn.addEventListener('click', toFinal);
+    dom.resetBtn.addEventListener('click', fullReset);
+
+    console.log("脚本已加载完成，所有事件绑定成功");
+  });
+</script>
+</body>
+</html>
