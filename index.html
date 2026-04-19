@@ -1,567 +1,601 @@
+以下是您需要的“原野之上·云朵浮游”风格PSTI人格测试网页的完整代码。它采用了暖黄、暖橙与天蓝、浅绿的柔和色调，选项设计为可滑入滑出的云朵形状，页面底部有摇曳的花草动画，每个结局页面也根据文案主题进行了差异化视觉呈现。
+
+```html
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>PSTI人格测试 · 梦境礼物</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet" />
-<style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>PSTI人格测试 · 原野上的礼物</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  body {
-    background: linear-gradient(145deg, #eef2ff 0%, #e0e9ff 100%);
-    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 1.5rem;
-    color: #1e293b;
-    position: relative;
-  }
+        body {
+            min-height: 100vh;
+            background: linear-gradient(165deg, #fff7e8 0%, #fde6cd 40%, #cbe6fe 100%);
+            font-family: 'Inter', system-ui, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1.5rem;
+            position: relative;
+            overflow-x: hidden;
+        }
 
-  body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at 20% 40%, rgba(255,245,215,0.3) 0%, rgba(210,230,255,0) 70%);
-    pointer-events: none;
-    z-index: 0;
-  }
+        /* 飘浮云朵背景 */
+        .floating-cloud {
+            position: fixed;
+            background: rgba(255, 255, 245, 0.7);
+            border-radius: 1000px;
+            box-shadow: 0 20px 35px -15px rgba(0,0,0,0.05), inset 0 1px 4px rgba(255,255,240,0.9);
+            backdrop-filter: blur(4px);
+            z-index: 0;
+            pointer-events: none;
+            animation: floatCloud linear infinite;
+        }
 
-  .page {
-    display: none;
-    max-width: 680px;
-    width: 100%;
-    background: rgba(255, 255, 255, 0.94);
-    backdrop-filter: blur(2px);
-    border-radius: 2.5rem;
-    box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.25), 0 4px 12px rgba(0, 0, 0, 0.05);
-    padding: 2.2rem 2rem 2.5rem;
-    transition: all 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    position: relative;
-    z-index: 2;
-  }
+        @keyframes floatCloud {
+            0% { transform: translateX(-10%) translateY(0px); }
+            50% { transform: translateX(10%) translateY(-12px); }
+            100% { transform: translateX(-10%) translateY(0px); }
+        }
 
-  .active {
-    display: block;
-    animation: fadeSlideUp 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-  }
+        /* 主卡片 */
+        .page {
+            display: none;
+            max-width: 680px;
+            width: 100%;
+            background: rgba(255, 253, 245, 0.82);
+            backdrop-filter: blur(14px);
+            border-radius: 3rem;
+            box-shadow: 0 30px 50px -20px rgba(0, 0, 0, 0.2), 0 8px 20px rgba(255,215,150,0.3);
+            padding: 2rem 1.8rem 2.8rem;
+            border: 1px solid rgba(255, 250, 210, 0.7);
+            position: relative;
+            z-index: 10;
+            animation: riseUp 0.5s ease-out;
+        }
 
-  @keyframes fadeSlideUp {
-    0% { opacity: 0; transform: translateY(18px); }
-    100% { opacity: 1; transform: translateY(0); }
-  }
+        @keyframes riseUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-  .progress {
-    width: 100%;
-    height: 8px;
-    background: #e2e8f0;
-    border-radius: 20px;
-    margin-bottom: 2rem;
-    overflow: hidden;
-  }
+        .active { display: block; }
 
-  .progress-bar {
-    height: 100%;
-    background: linear-gradient(90deg, #6c9eff, #a0c1ff);
-    width: 0%;
-    transition: width 0.4s ease-out;
-  }
+        /* 进度条 */
+        .progress {
+            width: 100%;
+            height: 6px;
+            background: #ffe2b5;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #f9b43a, #ffd966, #7bc9c2);
+            border-radius: 12px;
+            transition: width 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
 
-  .question-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 1rem;
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: #5b6e8c;
-  }
+        /* 云朵选项容器 */
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
 
-  .q-counter {
-    background: #eef2ff;
-    padding: 0.2rem 0.8rem;
-    border-radius: 40px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #2c3e66;
-  }
+        .cloud-option {
+            background: rgba(255, 248, 225, 0.9);
+            backdrop-filter: blur(4px);
+            border-radius: 60px;
+            padding: 0.9rem 1.5rem;
+            text-align: center;
+            font-weight: 500;
+            font-size: 1.05rem;
+            color: #b45f1b;
+            border: 1px solid #ffefcf;
+            box-shadow: 0 8px 16px -10px rgba(0,0,0,0.1), 0 0 0 1px rgba(255,245,190,0.8);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            transform: translateX(0);
+            opacity: 1;
+        }
 
-  .question {
-    font-size: 1.85rem;
-    font-weight: 700;
-    line-height: 1.35;
-    margin-bottom: 2rem;
-    background: linear-gradient(135deg, #1f3b4c, #2c5a7a);
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-  }
+        .cloud-option:hover {
+            transform: translateY(-4px) scale(1.01);
+            background: #fff8e7;
+            border-color: #ffcf8a;
+            box-shadow: 0 20px 25px -14px #ffbc6e;
+            color: #9b4a0e;
+        }
 
-  .options {
-    display: flex;
-    flex-direction: column;
-    gap: 0.9rem;
-    align-items: stretch;
-    margin-top: 0.5rem;
-  }
+        /* 滑入滑出动画 */
+        .slide-out {
+            animation: slideAway 0.35s forwards ease-in;
+        }
+        @keyframes slideAway {
+            0% { transform: translateX(0); opacity: 1; }
+            100% { transform: translateX(120%); opacity: 0; pointer-events: none; }
+        }
+        .slide-in {
+            animation: slideCome 0.4s cubic-bezier(0.2, 0.8, 0.4, 1);
+        }
+        @keyframes slideCome {
+            from { transform: translateX(-30px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
 
-  .options .btn {
-    text-align: center;
-    background: #ffffff;
-    border: 1px solid #dce5f2;
-    color: #1e3a5f;
-    font-weight: 500;
-    padding: 1rem 1.2rem;
-    border-radius: 1.8rem;
-    font-size: 1rem;
-    transition: all 0.25s ease;
-    cursor: pointer;
-    width: 100%;
-  }
+        .question {
+            font-size: 1.9rem;
+            font-weight: 600;
+            line-height: 1.3;
+            margin-bottom: 1.6rem;
+            color: #3b2a1f;
+            font-family: 'Playfair Display', serif;
+        }
 
-  .options .btn:hover {
-    transform: translateY(-2px);
-    background: #f9fcff;
-    border-color: #9bb6e5;
-    box-shadow: 0 12px 20px -12px rgba(70, 110, 180, 0.3);
-  }
+        .question-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            color: #bd8a4a;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
 
-  .btn {
-    padding: 0.9rem 2rem;
-    background: linear-gradient(105deg, #6c8eff, #7f9eff);
-    color: white;
-    border: none;
-    border-radius: 2rem;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.25s;
-    box-shadow: 0 6px 14px rgba(100, 120, 230, 0.25);
-  }
+        .title {
+            font-size: 3rem;
+            font-weight: 700;
+            font-family: 'Playfair Display', serif;
+            background: linear-gradient(130deg, #e68a2e, #f7bc45, #5f9e92);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+        }
 
-  .btn:hover {
-    background: linear-gradient(105deg, #5a7be6, #6c8eff);
-    transform: scale(0.98);
-  }
+        .sub {
+            color: #c28234;
+            border-top: 1px dashed #ffdaa0;
+            display: inline-block;
+            padding-top: 0.5rem;
+        }
 
-  .title {
-    font-size: 3.2rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, #1f3b4c, #2c5a7a, #4f6f9f);
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-    margin-bottom: 1rem;
-  }
+        .btn {
+            background: #ffdeae;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #864e1c;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+        }
+        .btn:hover {
+            background: #ffcf8a;
+            transform: scale(0.97);
+        }
 
-  .sub {
-    color: #5c6f8f;
-    margin-bottom: 2.5rem;
-    font-size: 0.95rem;
-    border-top: 1px solid #dce3ef;
-    display: inline-block;
-    padding-top: 0.6rem;
-  }
+        /* 动画文字 */
+        .animate-text {
+            font-size: 3.8rem;
+            font-weight: 800;
+            text-align: center;
+            margin: 2rem 0;
+            background: linear-gradient(125deg, #f0a34b, #f7d06e, #7ac9c0);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: 3px;
+        }
 
-  .animate-text {
-    font-size: 4.2rem;
-    font-weight: 800;
-    text-align: center;
-    margin: 2rem 0;
-    background: linear-gradient(125deg, #497dbe, #b28eff, #4f93ff);
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-    animation: gentleGlow 1.8s infinite alternate;
-  }
+        /* 内容卡片 */
+        .content-card {
+            background: rgba(255, 252, 235, 0.9);
+            border-radius: 2rem;
+            padding: 1.8rem;
+            margin: 1rem 0;
+            border-left: 8px solid #ffbc6e;
+            font-size: 1rem;
+            line-height: 1.7;
+            white-space: pre-line;
+            color: #2d3e3a;
+        }
 
-  @keyframes gentleGlow {
-    0% { text-shadow: 0 0 0px rgba(100, 130, 240, 0.2); }
-    100% { text-shadow: 0 0 12px rgba(100, 140, 255, 0.4); }
-  }
+        .small-tip {
+            font-size: 0.8rem;
+            color: #b49b6c;
+            margin-top: 1rem;
+            font-style: italic;
+        }
 
-  .content {
-    font-size: 1.08rem;
-    line-height: 1.75;
-    white-space: pre-line;
-    background: #fafdff;
-    padding: 1.8rem;
-    border-radius: 1.8rem;
-    margin: 1rem 0;
-    border: 1px solid #e9edf4;
-    color: #1f3c4f;
-  }
+        /* 底部花草 */
+        .grass {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            pointer-events: none;
+            z-index: 20;
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            gap: 8px;
+            padding: 0 20px;
+        }
+        .blade {
+            width: 6px;
+            background: linear-gradient(135deg, #8bc34a, #6f9e3f);
+            height: 28px;
+            border-radius: 20px 20px 4px 4px;
+            transform-origin: bottom;
+            animation: sway 3s infinite ease-in-out;
+        }
+        .blade:nth-child(even) { animation-duration: 2.4s; height: 38px; width: 5px; background: #9ccc65; }
+        .blade:nth-child(3n) { animation-duration: 3.5s; height: 22px; background: #aed581; }
+        .blade:nth-child(5n+2) { width: 8px; background: #7cb342; }
+        @keyframes sway {
+            0% { transform: rotate(0deg); }
+            50% { transform: rotate(6deg); }
+            100% { transform: rotate(-4deg); }
+        }
+        .flower {
+            position: fixed;
+            bottom: 15px;
+            left: 10%;
+            width: 18px;
+            height: 18px;
+            background: #ffb882;
+            border-radius: 50% 50% 0 50%;
+            transform: rotate(45deg);
+            pointer-events: none;
+            z-index: 20;
+            box-shadow: 0 0 6px #ffdd99;
+            animation: bob 2s infinite;
+        }
+        .flower2 { left: auto; right: 12%; background: #ffb347; width: 14px; height: 14px; animation-duration: 2.7s; }
+        @keyframes bob {
+            0% { transform: translateY(0px) rotate(45deg); }
+            50% { transform: translateY(-5px) rotate(45deg); }
+            100% { transform: translateY(0px) rotate(45deg); }
+        }
 
-  .small {
-    font-size: 0.85rem;
-    color: #8b9ab0;
-    margin-top: 0.8rem;
-    padding-left: 0.5rem;
-    border-left: 3px solid #9bb6e5;
-  }
+        /* 结局差异化样式 */
+        .final-drama { background: #fff9f0; border-left-color: #f1b558; box-shadow: 0 4px 20px rgba(241,181,88,0.1); }
+        .final-music { background: #f0fdf4; border-left-color: #7bc9b6; box-shadow: 0 4px 20px rgba(123,201,182,0.1); }
+        .final-book { background: #f5f0ff; border-left-color: #b7a6e5; box-shadow: 0 4px 20px rgba(183,166,229,0.1); }
+        .final-high { background: #fff7e0; border-left-color: #f7bc45; box-shadow: 0 4px 20px rgba(247,188,69,0.1); }
+        /* 哈利波特魔法特效 */
+        .final-harry {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #f0c27b;
+            border-left: 8px solid #ffd700;
+            text-shadow: 0 0 3px rgba(255,215,0,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        .final-harry::before {
+            content: "⚡";
+            position: absolute;
+            bottom: 10px;
+            right: 20px;
+            font-size: 3rem;
+            opacity: 0.2;
+            pointer-events: none;
+        }
+        /* 史铁生文艺风格 */
+        .final-shit iron {
+            background: #fef9e6;
+            border-left: 8px solid #8b5a2b;
+            font-style: italic;
+            font-family: 'Playfair Display', serif;
+        }
+        /* 音乐剧星光 */
+        .final-musical {
+            background: linear-gradient(135deg, #fff5e6, #ffe6f0);
+            border-left: 8px solid #ff9f4a;
+            position: relative;
+        }
+        .final-musical::after {
+            content: "♪ ♫";
+            position: absolute;
+            bottom: 8px;
+            right: 15px;
+            font-size: 1.8rem;
+            opacity: 0.3;
+        }
 
-  #finalContent {
-    background: #fffef7;
-    border-left: 5px solid #6c8eff;
-  }
-
-  .reset-link {
-    margin-top: 2rem;
-    text-align: center;
-  }
-
-  .reset-btn {
-    background: none;
-    border: 1px solid #cbdbe0;
-    color: #5c6f8a;
-    padding: 0.5rem 1.5rem;
-    font-size: 0.8rem;
-    border-radius: 40px;
-    cursor: pointer;
-    background: rgba(255,255,240,0.7);
-  }
-
-  .reset-btn:hover {
-    background: #eef3ff;
-    border-color: #8ba5d0;
-  }
-
-  #openBtn {
-    background: linear-gradient(120deg, #f7b787, #ff9f6e);
-    box-shadow: 0 12px 20px -8px rgba(255, 140, 70, 0.4);
-  }
-
-  @media (max-width: 550px) {
-    .page { padding: 1.8rem 1.5rem; }
-    .title { font-size: 2.5rem; }
-    .question { font-size: 1.5rem; }
-    .animate-text { font-size: 2.8rem; }
-  }
-</style>
+        @media (max-width: 550px) {
+            .page { padding: 1.5rem; }
+            .title { font-size: 2.2rem; }
+            .question { font-size: 1.5rem; }
+            .animate-text { font-size: 2.5rem; }
+        }
+    </style>
 </head>
 <body>
 
+<div id="cloudsContainer"></div>
+<div class="grass" id="grassArea"></div>
+<div class="flower"></div>
+<div class="flower flower2"></div>
+
 <!-- 欢迎页 -->
 <div class="page active" id="welcome">
-  <div class="title">PSTI人格测试</div>
-  <div class="sub">· 梦境编织 · 一份来自未来的礼物</div>
-  <button class="btn" id="startBtn">✨ 开启旅程 ✨</button>
+    <div class="title">PSTI人格测试</div>
+    <div class="sub">· 原野与云 · 一份提前藏好的礼物</div>
+    <button class="btn" id="startBtn" style="margin-top: 2rem;">✨ 开启旅程 ✨</button>
 </div>
 
 <!-- 答题页 -->
 <div class="page" id="quiz">
-  <div class="progress"><div class="progress-bar" id="bar"></div></div>
-  <div class="question-meta">
-    <span class="q-counter" id="qCounter">第1 / 6题</span>
-    <span>🌙 直觉选择</span>
-  </div>
-  <div class="question" id="q"></div>
-  <div class="options" id="opts"></div>
+    <div class="progress"><div class="progress-bar" id="bar"></div></div>
+    <div class="question-meta"><span class="q-counter" id="qCounter">第1 / 6题</span><span>🌾 风与选择</span></div>
+    <div class="question" id="q"></div>
+    <div class="options" id="opts"></div>
 </div>
 
-<!-- 动画页 -->
+<!-- 动画过渡页 -->
 <div class="page" id="animate">
-  <div class="animate-text" id="at">PSTI</div>
-  <button class="btn" id="openBtn" style="display:none">✨ 拆礼物吧 ✨</button>
-  <div style="margin-top: 30px; font-size: 0.8rem; color:#7c8ba0;">正在为你酝酿宇宙级浪漫 ...</div>
+    <div class="animate-text" id="at">PSTI</div>
+    <button class="btn" id="openBtn" style="display:none" onclick="toMessage()">🎁 拆礼物吧 🎁</button>
+    <div style="text-align:center; margin-top:1rem; color:#c28234;">云朵在聚拢，礼物正在成形...</div>
 </div>
 
 <!-- 寄语页 -->
 <div class="page" id="message">
-  <div class="content" id="msgContent"></div>
-  <div class="small" id="msgTip"></div>
-  <div style="margin-top: 30px"><button class="btn" id="toFinalBtn">✦ 继续旅程 ✦</button></div>
+    <div class="content-card" id="msgContent"></div>
+    <div class="small-tip" id="msgTip"></div>
+    <div style="margin-top: 2rem; text-align:center;"><button class="btn" onclick="toFinal()">✦ 继续 ✦</button></div>
 </div>
 
 <!-- 最终结果页 -->
 <div class="page" id="final">
-  <div class="content" id="finalContent"></div>
-  <div class="reset-link"><button class="reset-btn" id="resetBtn">🔄 重新测试</button></div>
+    <div class="content-card" id="finalContent"></div>
+    <div style="margin-top: 2rem; text-align:center;"><button class="btn reset-btn" onclick="fullReset()">🌼 重新测试</button></div>
 </div>
 
 <script>
-  // 等待页面完全加载后再执行脚本
-  document.addEventListener('DOMContentLoaded', function() {
     // 题库
     const questions = [
-      {q:"今天过得好吗？",opt:["爽哉爽哉！","一如既往。","并不。"]},
-      {q:"你或许想要什么？",opt:["我想挣脱。","我想得到。","我想爱。","我想被爱。"]},
-      {q:"或许需要什么？",opt:["勇气","自由","Passion！","现在立刻马上！谁帮我完成deadline！","家产在我面前酱酱酿酿......（淫笑）"]},
-      {q:"或许愿意做点什么？",opt:["看点什么？","听点什么？","读点什么？"]},
-      {q:"或许，呃，需要一台时光机？",opt:["那就试试回到过去吧！","我并不讨厌现在。","我确实好奇，未来会变好吗？"]},
-      {q:"所以PSTI是什么？",opt:["Photoshop人格测试。","postscript人格测试。","索尼游戏主机人格测试。","朋友发我链接我就点进来了......所以是什么？"]}
+        {q:"今天过得好吗？",opt:["爽哉爽哉！","一如既往。","并不。"]},
+        {q:"你或许想要什么？",opt:["我想挣脱。","我想得到。","我想爱。","我想被爱。"]},
+        {q:"或许需要什么？",opt:["勇气","自由","Passion！","现在立刻马上！谁帮我完成deadline！","家产在我面前酱酱酿酿......（淫笑）"]},
+        {q:"或许愿意做点什么？",opt:["看点什么？","听点什么？","读点什么？"]},
+        {q:"或许，呃，需要一台时光机？",opt:["那就试试回到过去吧！","我并不讨厌现在。","我确实好奇，未来会变好吗？"]},
+        {q:"所以PSTI是什么？",opt:["Photoshop人格测试。","postscript人格测试。","索尼游戏主机人格测试。","朋友发我链接我就点进来了......所以是什么？"]}
     ];
 
-    let cur = 0;
-    let ans = [];
+    let cur = 0, ans = [];
     let animTimeouts = [];
 
-    // 缓存所有DOM元素（避免重复获取）
-    const dom = {
-      welcome: document.getElementById('welcome'),
-      quiz: document.getElementById('quiz'),
-      animate: document.getElementById('animate'),
-      message: document.getElementById('message'),
-      final: document.getElementById('final'),
-      bar: document.getElementById('bar'),
-      qCounter: document.getElementById('qCounter'),
-      q: document.getElementById('q'),
-      opts: document.getElementById('opts'),
-      at: document.getElementById('at'),
-      openBtn: document.getElementById('openBtn'),
-      msgContent: document.getElementById('msgContent'),
-      msgTip: document.getElementById('msgTip'),
-      finalContent: document.getElementById('finalContent'),
-      startBtn: document.getElementById('startBtn'),
-      toFinalBtn: document.getElementById('toFinalBtn'),
-      resetBtn: document.getElementById('resetBtn')
-    };
-
-    // 验证核心元素是否存在
-    const missingElements = Object.entries(dom).filter(([key, el]) => !el).map(([key]) => key);
-    if (missingElements.length > 0) {
-      console.error('缺失核心DOM元素：', missingElements);
-      alert('页面加载异常，缺失核心元素：' + missingElements.join(', '));
-      return;
+    function generateClouds() {
+        const container = document.getElementById('cloudsContainer');
+        if(!container) return;
+        for(let i=0;i<12;i++) {
+            const cloud = document.createElement('div');
+            cloud.classList.add('floating-cloud');
+            const size = 70 + Math.random() * 150;
+            cloud.style.width = size + 'px';
+            cloud.style.height = (size * 0.55) + 'px';
+            cloud.style.left = Math.random() * 100 + '%';
+            cloud.style.top = Math.random() * 70 + '%';
+            cloud.style.animationDuration = 20 + Math.random() * 30 + 's';
+            cloud.style.animationDelay = Math.random() * 10 + 's';
+            cloud.style.opacity = 0.4 + Math.random() * 0.4;
+            container.appendChild(cloud);
+        }
     }
 
-    // 清理计时器
-    function clearAnimTimeouts() {
-      animTimeouts.forEach(t => clearTimeout(t));
-      animTimeouts = [];
-    }
+    function clearAnim() { if(animTimeouts) animTimeouts.forEach(t=>clearTimeout(t)); animTimeouts=[]; }
 
-    // 重置所有
-    function fullReset() {
-      console.log("fullReset called");
-      clearAnimTimeouts();
-      cur = 0;
-      ans = [];
-      // 隐藏所有页面
-      [dom.welcome, dom.quiz, dom.animate, dom.message, dom.final].forEach(p => p.classList.remove('active'));
-      // 显示欢迎页
-      dom.welcome.classList.add('active');
-      dom.at.innerText = 'PSTI';
-      dom.openBtn.style.display = 'none';
-      dom.bar.style.width = '0%';
-    }
-
-    // 加载题目
     function loadQuestion() {
-      if (cur >= questions.length) {
-        ani();
-        return;
-      }
-      const d = questions[cur];
-      dom.q.innerText = d.q;
-      dom.opts.innerHTML = '';
-      dom.qCounter.innerText = `第${cur+1} / ${questions.length}题`;
-      
-      d.opt.forEach((text, idx) => {
-        const btn = document.createElement('button');
-        btn.className = 'btn';
-        btn.innerText = text;
-        btn.onclick = () => {
-          ans.push(idx);
-          cur++;
-          if (cur < questions.length) loadQuestion();
-          else ani();
-        };
-        dom.opts.appendChild(btn);
-      });
-      
-      const percent = ((cur + 1) / questions.length) * 100;
-      dom.bar.style.width = percent + '%';
+        if(cur >= questions.length) { ani(); return; }
+        const d = questions[cur];
+        document.getElementById('q').innerText = d.q;
+        const optsDiv = document.getElementById('opts');
+        const existingBtns = optsDiv.querySelectorAll('.cloud-option');
+        if(existingBtns.length) {
+            existingBtns.forEach(btn => { btn.classList.add('slide-out'); });
+            setTimeout(() => {
+                optsDiv.innerHTML = '';
+                renderOptions(d, optsDiv);
+            }, 280);
+        } else {
+            renderOptions(d, optsDiv);
+        }
+        document.getElementById('qCounter').innerText = `第${cur+1} / ${questions.length}题`;
+        const percent = ((cur+1)/questions.length)*100;
+        document.getElementById('bar').style.width = percent+'%';
     }
 
-    // 开始测试
+    function renderOptions(d, container) {
+        d.opt.forEach((text, idx) => {
+            const btn = document.createElement('div');
+            btn.className = 'cloud-option slide-in';
+            btn.innerText = text;
+            btn.onclick = () => {
+                btn.classList.add('slide-out');
+                setTimeout(() => {
+                    ans.push(idx);
+                    cur++;
+                    loadQuestion();
+                }, 200);
+            };
+            container.appendChild(btn);
+        });
+    }
+
     function startPSTI() {
-      console.log("startPSTI called");
-      clearAnimTimeouts();
-      cur = 0;
-      ans = [];
-      // 切换页面
-      dom.welcome.classList.remove('active');
-      dom.quiz.classList.add('active');
-      dom.at.innerText = 'PSTI';
-      dom.openBtn.style.display = 'none';
-      dom.bar.style.width = '0%';
-      loadQuestion();
+        clearAnim();
+        cur = 0; ans = [];
+        document.getElementById('welcome').classList.remove('active');
+        document.getElementById('quiz').classList.add('active');
+        document.getElementById('at').innerText = 'PSTI';
+        document.getElementById('openBtn').style.display = 'none';
+        document.getElementById('bar').style.width = '0%';
+        loadQuestion();
     }
 
-    // 动画
     function ani() {
-      dom.quiz.classList.remove('active');
-      dom.animate.classList.add('active');
-      dom.at.innerText = 'PSTI';
-      clearAnimTimeouts();
-      
-      const t1 = setTimeout(() => { dom.at.innerText = 'PRESENTI'; }, 800);
-      const t2 = setTimeout(() => {
-        dom.at.innerText = 'PRESENT';
-        dom.at.style.fontWeight = 'bold';
-        dom.openBtn.style.display = 'inline-block';
-      }, 1800);
-      
-      animTimeouts = [t1, t2];
+        document.getElementById('quiz').classList.remove('active');
+        document.getElementById('animate').classList.add('active');
+        const atEl = document.getElementById('at');
+        clearAnim();
+        atEl.innerText = 'PSTI';
+        const t1 = setTimeout(() => { if(atEl) atEl.innerText = 'PRESENTI'; }, 800);
+        const t2 = setTimeout(() => {
+            if(atEl) { atEl.innerText = 'PRESENT'; atEl.style.fontWeight = 'bold'; }
+            document.getElementById('openBtn').style.display = 'inline-block';
+        }, 1800);
+        animTimeouts = [t1, t2];
     }
 
-    // 生日计算
     function getAge() {
-      const birth = new Date(2004, 3, 17);
-      const now = new Date();
-      let diff = now - birth;
-      const second = 1000, minute = second * 60, hour = minute * 60, day = hour * 24;
-      const month = day * 30.4375, year = day * 365.25;
-      let y = Math.floor(diff / year); diff %= year;
-      let m = Math.floor(diff / month); diff %= month;
-      let d = Math.floor(diff / day); diff %= day;
-      let h = Math.floor(diff / hour); diff %= hour;
-      let mi = Math.floor(diff / minute); diff %= minute;
-      let s = Math.floor(diff / second);
-      return `${y}岁零${m}个月${d}天${h}小时${mi}分${s}秒`;
+        const birth = new Date(2004, 3, 17);
+        const now = new Date();
+        let diff = now - birth;
+        const second = 1000, minute = second*60, hour = minute*60, day = hour*24;
+        const month = day*30.4375, year = day*365.25;
+        let y = Math.floor(diff/year); diff %= year;
+        let m = Math.floor(diff/month); diff %= month;
+        let d = Math.floor(diff/day); diff %= day;
+        let h = Math.floor(diff/hour); diff %= hour;
+        let mi = Math.floor(diff/minute); diff %= minute;
+        let s = Math.floor(diff/second);
+        return `${y}岁零${m}个月${d}天${h}小时${mi}分${s}秒`;
     }
 
-    // 寄语
     function toMessage() {
-      console.log("toMessage called");
-      clearAnimTimeouts();
-      dom.animate.classList.remove('active');
-      dom.message.classList.add('active');
-      
-      const ageText = getAge();
-      const q3 = ans[2];
-      let content = `我绞尽脑汁想出这份生日礼物，我是不是宇宙第一浪漫？！
-
-天南海北，就是一抬腿的距离，那空间不是问题，或许时间也不是？
-
-我想啊想啊，我是个擅长做梦的人，那为什么不送你一些梦呢？
-
-祝${ageText}的晓光浮野
-生活着的每一日，都要快乐！`;
-      let tip = '';
-      if (q3 === 3) tip = '还“现在立刻马上帮我完成deadline”，你在向谁求助，syx吗？所托非人啊。';
-      if (q3 === 4) tip = '祝家产99。';
-      
-      dom.msgContent.innerText = content;
-      dom.msgTip.innerText = tip;
+        clearAnim();
+        document.getElementById('animate').classList.remove('active');
+        document.getElementById('message').classList.add('active');
+        const ageText = getAge();
+        const q3 = ans[2];
+        let content = `我绞尽脑汁想出这份生日礼物，我是不是宇宙第一浪漫？\\n\\n天南海北，就是一抬腿的距离，那空间不是问题，或许时间也不是？\\n\\n我想啊想啊，我是个擅长做梦的人，那为什么不送你一些梦呢？\\n\\n祝${ageText}的晓光浮野\\n生活着的每一日，都要快乐！`;
+        let tip = '';
+        if (q3 === 3) tip = '还“现在立刻马上帮我完成deadline”，你在向谁求助，syx吗？所托非人啊。';
+        if (q3 === 4) tip = '祝家产99。';
+        document.getElementById('msgContent').innerText = content;
+        document.getElementById('msgTip').innerText = tip;
     }
 
-    // 最终结果
+    // 根据分支生成结局文案 + 专属样式
+    function getPoeticOutcome() {
+        const q2 = ans[1], q3 = ans[2], q4 = ans[3], q5 = ans[4];
+        
+        // 彩蛋：我想被爱
+        if (q2 === 3) {
+            return { 
+                text: `你点了“我想被爱”。\\n\\n窗外的梧桐叶正一片片落进伦敦的暮色里，你坐在书桌前，屏幕的光映在脸上。其实你不需要点这个选项——我早就把答案藏在了每一次秒针跳动里。时差八小时，刚好够我把晚安寄出，你醒来签收。如果你非要一个结局，那就是：你被爱着，从你还没问这个问题的时候，就是了。\\n\\n*爱不设问*`, 
+                style: 'final-drama' 
+            };
+        }
+
+        // 高中语文 / 回忆分支 (回到过去)
+        if(q5 === 0) {
+            if(q3===0 && q2===0) return { text: `黑板上的粉笔字密密麻麻，你却总盯着钟发呆。后来你按时长大，去了很远的地方。教室里没有反方向的钟，可你总在某个深夜，听见粉笔吱吱呀呀的声音。那些没写完的卷子，没说完的话，都变成了异国枕头上的一小块潮湿。其实不用回去——你走过的每一步，都已经把旧时光带到了新天地里。\\n\\n*达成成就：青云万里*`, style: 'final-high' };
+            if(q3===0 && q2===1) return { text: `想得到什么呢？也许是一个拥抱，一句肯定。史铁生说，只要你往前走，他总是给路。路不是找来的，是脚步自己长出来的。你在异国的每一步，都在悄悄收获。不用急，月亮也会慢慢圆。\\n\\n*愿你所求，皆有回响*`, style: 'final-shit iron' };
+            if(q3===0 && q2===2) return { text: `想爱，就爱吧。邓布利多说过，不要怜悯死者，怜悯那些活着却没有爱的人。而你心里有爱——它像英格兰冬天里的一捧壁炉，不大，但足够暖。你爱着的时候，世界就近了一寸。\\n\\n*爱从不迷路*`, style: 'final-harry' };
+            if(q3===1 && q2===0) return { text: `挣脱的尽头，是自由。自由的尽头，是原谅。你已经在很远的地方了，远到那些旧事追不上你。就让它留在本初子午线的西边吧，而你，向东走。\\n\\n*风与自由同在*`, style: 'final-high' };
+            if(q3===1 && q2===1) return { text: `你想要的自由，也许不是远行，而是终于可以安心地做一个普通人。史铁生说，梦想使你迷醉，距离就成了欢乐。你和家乡的距离，刚好够你重新认识自己。得到自由的那一天，你会知道——原来你早就是了。`, style: 'final-shit iron' };
+            if(q3===1 && q2===2) return { text: `爱和自由，是两个自由的人互相照见。你爱着的时候，不是绑住谁，而是让彼此都有风可以穿过。你在英国的风里，已经学会这件事了。\\n\\n*爱如原野*`, style: 'final-high' };
+            if(q3===2 && q2===0) return { text: `Passion是烧在心里的火，挣脱是打开炉门，让它照亮别人。回忆里的那些不甘心，其实是火种。别怕它烫，它在，你就还活着。\\n\\n*生生不息*`, style: 'final-musical' };
+            if(q3===2 && q2===1) return { text: `想得到Passion，其实不用找。你熬夜读完的一本书，你和朋友聊到凌晨的话题，你对着窗外发呆的那个下午——都是。它不在远方，它在你没有设防的时刻，轻轻拍你的肩。`, style: 'final-musical' };
+            if(q3===2 && q2===2) return { text: `爱是一种很烈的Passion。它会让你在深夜里想家，也会让你在陌生街头忽然笑出来。你在英国，爱着那里偶尔的晴天，也爱着那里的漫长雨季。这就够了。有爱的人，不荒凉。`, style: 'final-musical' };
+        }
+
+        // 话剧 / 喜剧 / 明星大侦探 (看点什么)
+        if(q4 === 0) {
+            if(q3===0 && q2===0) return { text: `“别怕，我要带你走。”不是真的走，是告诉你——在池沼之上，在幽谷之上，越过山和森林，越过云和大海，有一个地方，是你的想象。生活有时候太重了，但你可以飞一会儿。我在岸边等你。\\n\\n*春山如笑*`, style: 'final-drama' };
+            if(q3===0 && q2===1) return { text: `“忘掉是一般人能做的唯一的事，可是，我决定不忘掉。”你想要得到的东西，也许就在“不忘掉”里。不忘掉故乡的月亮，不忘掉出发时的自己。我帮你记着。`, style: 'final-drama' };
+            if(q3===0 && q2===2) return { text: `“上天会厚待那些勇敢的，坚强的，多情的人。”你多情，你勇敢，你坚强。所以上天会厚待你——哪怕它来得慢一点。在它来之前，我先厚待你。`, style: 'final-drama' };
+            if(q3===1 && q2===0) return { text: `“快乐而不是胜利的真理，将被传播至永恒。”你想挣脱的，是那个必须赢的自己。试着输一次，试着平凡一次，你会发现快乐比胜利轻多了。轻到可以飘过大西洋，落在我这里。`, style: 'final-drama' };
+            if(q3===1 && q2===1) return { text: `“我不追求赢，也不追求输，不追求快乐，更不追求哭。”什么都不追求的时候，反而最自由。像云，像风，像伦敦偶尔放晴的天。你想要的，会在你不追的时候，自己走来。`, style: 'final-drama' };
+            if(q3===1 && q2===2) return { text: `“或许是有不开心做底色，快乐才足够亮眼。”你的底色我见过——不全是亮色，但刚好让那些快乐显得珍贵。爱不需要完美的底色，爱就是爱。`, style: 'final-drama' };
+            if(q3===2 && q2===0) return { text: `“成功是一时的，但失败和平凡是我们生命的主旋律。”那么，就唱这首主旋律吧。平凡的日子里，也有Passion——在热茶里，在深夜的消息里，在你想我的那一秒里。`, style: 'final-drama' };
+            if(q3===2 && q2===1) return { text: `“出发不只是为了到达，路途虽曲折漫长，但也处处美好。”你已经在路上了。曲折也是风景，漫长也是陪伴。我在中途站等你，不急。`, style: 'final-drama' };
+            if(q3===2 && q2===2) return { text: `“用真心就可以吗？”真心不一定能换来所有，但真心会让你在回头看的时候，不后悔。你的真心，我收到了。很暖。`, style: 'final-drama' };
+        }
+
+        // 毛不易 / 音乐剧 (听点什么)
+        if(q4 === 1) {
+            if(q3===0 && q2===0) return { text: `“就算世界是牢笼，至少我还有权力做梦。”梦是你的签证，可以去任何地方。挣脱不了世界，就挣脱地心引力。我在你的梦里，留了一盏灯。\\n\\n*生生不息*`, style: 'final-musical' };
+            if(q3===0 && q2===1) return { text: `“I see a new day is coming.”新的一天，不是等来的，是你睁眼的那一刻，它刚好诞生。你在时差的另一端，每一天都是新的。我也是。`, style: 'final-musical' };
+            if(q3===0 && q2===2) return { text: `“谁说天上的地上的水与火不可能相见呢相爱呢？”你和我的距离，就像水和火，像昼和夜。但它们依然可以在某个时刻相遇——比如黄昏，比如日出。比如你读到这里的时候。`, style: 'final-musical' };
+            if(q3===1 && q2===0) return { text: `“在路上的人总是一个样，一步一响踏着迷惘，和自己较真磨不灭的倔强。”迷惘是路的回声。有回声，说明你走得够远。倔强是好事，它会带你走出迷惘，走进一片开阔地。`, style: 'final-music' };
+            if(q3===1 && q2===1) return { text: `“我和你一样，借着微弱的光，也寻找方向。”微弱的光也够用。萤火虫也只靠那一点亮，就找到了另一只萤火虫。我在光的那头，等你。`, style: 'final-music' };
+            if(q3===1 && q2===2) return { text: `“从南到北，来了又去，从东到西，忙忙碌碌。我怀揣梦想，我背着爱情，我跌跌撞撞。”跌跌撞撞也没关系，梦想和爱情不会碎，它们只是跟着你一起摇晃。摇晃着摇晃着，就到了。`, style: 'final-music' };
+            if(q3===2 && q2===0) return { text: `“我热爱布满荆棘的生命，看平凡闪烁出奇迹。”荆棘里有花，平凡里有光。你不需要挣脱，你只需要换一种眼神去看。奇迹已经发生了——你在这里，读着这些字。`, style: 'final-musical' };
+            if(q3===2 && q2===1) return { text: `“相信迷人的追光一定会为我而照亮。”追光来之前，你可以先为自己点一盏。你值得被照亮，也值得自己发光。`, style: 'final-musical' };
+            if(q3===2 && q2===2) return { text: `“就算世界是牢笼，至少我还有权力做梦。”梦是你最自由的领地。在那里，没有时差，没有距离。我经常在那里见你。你没发现而已。`, style: 'final-musical' };
+        }
+
+        // 书卷 / 史铁生 / 哈利波特 (读点什么)
+        if(q4 === 2) {
+            if(q3===0 && q2===0) return { text: `史铁生说，只要你往前走，他总是给路。路不在脚下，在决定往前走的那一刻。你已经走了那么远，远到回头看时，来路已经开满野花。挣脱不是离开，是终于可以轻轻放下。\\n\\n*翻页即天亮*`, style: 'final-shit iron' };
+            if(q3===0 && q2===1) return { text: `“但是太阳，它每时每刻都是夕阳也都是旭日。”你失去的，会在另一个地方重生。就像这里的黄昏，正是那里的清晨。你想得到的，也许已经在路上了。`, style: 'final-shit iron' };
+            if(q3===0 && q2===2) return { text: `“Do not pity the dead, Harry. Pity the living, and above all those who live without love.”你活着，你爱着，所以你不需要被怜悯。你是被羡慕的那个。隔着海，我也能感到你心里的温度。`, style: 'final-harry' };
+            if(q3===1 && q2===0) return { text: `“True power does not lie in controlling others, but in knowing when to let them go.”放手，是一种很轻的力量。你放手的那些，会在别处好好生长。而你，会因此更自由。`, style: 'final-harry' };
+            if(q3===1 && q2===1) return { text: `“我微笑着唱生活的歌谣，倘若生命只求得两点一线的一帆风顺，那生命便也失去了它的意义。”你的生命有曲线，有低谷，有意外。所以它有意义。你唱的每一句，我都听见了。`, style: 'final-shit iron' };
+            if(q3===1 && q2===2) return { text: `“我经由光阴，经由山水，经由乡村和城市……那路途中的一切，有些与我擦肩而过从此天各一方，有些便永久驻进我的心魂，雕琢我，塑造我，锤炼我，融入我而成为我。”你正在被英国的日子雕琢。每一场雨，每一篇论文，每一次想家，都会成为你。我会认出那个新的你，像认出老朋友。`, style: 'final-shit iron' };
+            if(q3===2 && q2===0) return { text: `“I am what I am, an' I'm not ashamed.”你是你，不必抱歉。你的Passion，你的古怪，你的安静，都是你。海格会为你骄傲，我也是。`, style: 'final-harry' };
+            if(q3===2 && q2===1) return { text: `“梦想使你迷醉，距离就成了欢乐；追求使你充实，失败和成功都是伴奏；当生命以美的形式证明其价值的时候，幸福是享受，痛苦也是享受。”你在追求，你在迷醉，所以距离成了欢乐，失败也成了伴奏。这首曲子很长，我陪你听到最后一个音符。`, style: 'final-shit iron' };
+            if(q3===2 && q2===2) return { text: `“人活着，必要有一个最美的梦想。”你的梦想，如果就是爱本身呢？那么你已经在实现它了。每当你爱着什么的时候，你就是最美的梦。`, style: 'final-harry' };
+        }
+
+        return { text: `原野上的风轻轻吹过，你所有的选择都汇聚成此刻的云朵。你一直被爱着，无论走到哪个结局。`, style: 'final-drama' };
+    }
+
     function toFinal() {
-      console.log("toFinal called");
-      dom.message.classList.remove('active');
-      dom.final.classList.add('active');
-      
-      const q2 = ans[1], q3 = ans[2], q4 = ans[3], q5 = ans[4];
-      if (q2 === 3) {
-        dom.finalContent.innerText = `此人没有设计【我想被爱】通往的分支结局。
-因为我明明一直在这儿，你怎么会不被爱呢！
-Trick Question罢了！
-
-如有异议，请致电13621776670，我好好说道说道你。`;
-        return;
-      }
-      
-      let type = '';
-      if (q5 === 0) type = 'high';
-      else {
-        if (q4 === 0) type = 'drama';
-        if (q4 === 1) type = 'music';
-        if (q4 === 2) type = 'book';
-      }
-      
-      let txt = '';
-      if (type === 'high') {
-        if (q3 === 0) {
-          if (q2 === 0) txt = '回忆（分支1）';
-          if (q2 === 1) txt = '得到勇气';
-          if (q2 === 2) txt = '爱勇气';
-        }
-        if (q3 === 1) {
-          if (q2 === 0) txt = '回忆（分支2）';
-          if (q2 === 1) txt = '得到自由';
-          if (q2 === 2) txt = '爱自由';
-        }
-        if (q3 === 2) {
-          if (q2 === 0) txt = '回忆（分支3）';
-          if (q2 === 1) txt = '得到passion';
-          if (q2 === 2) txt = '爱passion';
-        }
-      }
-      if (type === 'drama') {
-        if (q3 === 0) {
-          if (q2 === 0) txt = '话剧：别怕，我要带你走。在池沼上面，在幽谷上面，越过山和森林，越过云和大海，越过太阳那边，越过轻云之外，越过星空世界的无涯极限，凌驾于生活之上。';
-          if (q2 === 1) txt = '话剧：忘掉是一般人能做的唯一的事，可是，我决定不忘掉她。';
-          if (q2 === 2) txt = '话剧：上天会厚待那些勇敢的，坚强的，多情的人。';
-        }
-        if (q3 === 1) {
-          if (q2 === 0) txt = '喜剧：快乐而不是胜利的真理，将被传播至永恒。';
-          if (q2 === 1) txt = '喜剧：我不追求赢，也不追求输，不追求快乐，更不追求哭。';
-          if (q2 === 2) txt = '明星大侦探：或许是有不开心做底色，快乐才足够亮眼。';
-        }
-        if (q3 === 2) {
-          if (q2 === 0) txt = '喜剧：成功是一时的，但失败和平凡是我们生命的主旋律。';
-          if (q2 === 1) txt = '明星大侦探：出发不只是为了到达，路途虽曲折漫长，但也处处美好。';
-          if (q2 === 2) txt = '喜剧：用真心就可以吗？！';
-        }
-      }
-      if (type === 'music') {
-        if (q3 === 0) {
-          if (q2 === 0) txt = '音乐剧：就算世界是牢笼，至少我还有权力做梦。';
-          if (q2 === 1) txt = '音乐剧：I see a new day is coming.';
-          if (q2 === 2) txt = '音乐剧：谁说天上的地上的水与火不可能相见呢相爱呢？';
-        }
-        if (q3 === 1) {
-          if (q2 === 0) txt = '毛不易：在路上的人总是一个样，一步一响踏着迷惘，和自己较真磨不灭的倔强。';
-          if (q2 === 1) txt = '毛不易：我和你一样，借着微弱的光，也寻找方向。';
-          if (q2 === 2) txt = '毛不易：从南到北，来了又去，从东到西，忙忙碌碌。我怀揣梦想，我背着爱情，我跌跌撞撞。';
-        }
-        if (q3 === 2) {
-          if (q2 === 0) txt = '毛不易：我热爱布满荆棘的生命，看平凡闪烁出奇迹。';
-          if (q2 === 1) txt = '音乐剧：相信迷人的追光一定会为我而照亮。';
-          if (q2 === 2) txt = '音乐剧：就算世界是牢笼，至少我还有权力做梦。';
-        }
-      }
-      if (type === 'book') {
-        if (q3 === 0) {
-          if (q2 === 0) txt = '史铁生：神的完美在于仁慈，仁慈在于，只要你往前走，他总是给路。在神的字典里，行与路共用一种解释。';
-          if (q2 === 1) txt = '史铁生：但是太阳，它每时每刻都是夕阳也都是旭日。';
-          if (q2 === 2) txt = '哈利波特：Do not pity the dead, Harry. Pity the living, and, above all those who live without love. —— Albus Dumbledore';
-        }
-        if (q3 === 1) {
-          if (q2 === 0) txt = '哈利波特：True power does not lie in controlling others, but in knowing when to let them go. —— Albus Dumbledore';
-          if (q2 === 1) txt = '史铁生：我微笑着唱生活的歌谣，倘若生命只求得两点一线的一帆风顺，那生命便也失去了它的意义。';
-          if (q2 === 2) txt = '史铁生：我经由光阴，经由山水，经由乡村和城市……那路途中的一切，有些与我擦肩而过从此天各一方，有些便永久驻进我的心魂，雕琢我，塑造我，锤炼我，融入我而成为我。';
-        }
-        if (q3 === 2) {
-          if (q2 === 0) txt = '哈利波特：I am what I am, an\' I\'m not ashamed. —— Hagrid';
-          if (q2 === 1) txt = '史铁生：梦想使你迷醉，距离就成了欢乐；追求使你充实，失败和成功都是伴奏；当生命以美的形式证明其价值的时候，幸福是享受，痛苦也是享受。';
-          if (q2 === 2) txt = '史铁生：人活着，必要有一个最美的梦想。';
-        }
-      }
-      if (!txt) txt = '星尘编织，梦境回响，你是独一无二的存在。';
-      dom.finalContent.innerText = txt;
+        document.getElementById('message').classList.remove('active');
+        const finalPage = document.getElementById('final');
+        finalPage.classList.add('active');
+        const outcome = getPoeticOutcome();
+        const finalDiv = document.getElementById('finalContent');
+        finalDiv.innerText = outcome.text;
+        finalDiv.className = 'content-card ' + outcome.style;
     }
 
-    // 绑定所有按钮事件（替代内联onclick，更稳定）
-    dom.startBtn.addEventListener('click', startPSTI);
-    dom.openBtn.addEventListener('click', toMessage);
-    dom.toFinalBtn.addEventListener('click', toFinal);
-    dom.resetBtn.addEventListener('click', fullReset);
+    function fullReset() {
+        clearAnim();
+        cur = 0; ans = [];
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('welcome').classList.add('active');
+        document.getElementById('at').innerText = 'PSTI';
+        document.getElementById('openBtn').style.display = 'none';
+        document.getElementById('bar').style.width = '0%';
+    }
 
-    console.log("脚本已加载完成，所有事件绑定成功");
-  });
+    window.startPSTI = startPSTI;
+    window.toMessage = toMessage;
+    window.toFinal = toFinal;
+    window.fullReset = fullReset;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        generateClouds();
+        document.getElementById('startBtn').onclick = startPSTI;
+        const grassDiv = document.getElementById('grassArea');
+        for(let i=0;i<36;i++) {
+            const blade = document.createElement('div');
+            blade.classList.add('blade');
+            blade.style.animationDelay = (i*0.1)+'s';
+            grassDiv.appendChild(blade);
+        }
+    });
 </script>
 </body>
 </html>
+```
