@@ -10,6 +10,7 @@
             padding: 0;
             box-sizing: border-box;
             user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -19,7 +20,7 @@
             justify-content: center;
             align-items: center;
             font-family: 'Segoe UI', 'Roboto', 'Noto Serif SC', 'Microsoft YaHei', serif;
-            padding: 20px;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
             position: relative;
             overflow-x: hidden;
             line-height: 1.6;
@@ -52,11 +53,11 @@
             border-radius: 1000px;
             box-shadow: 0 20px 35px -8px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(255,248,220,0.7);
             backdrop-filter: blur(8px);
-            animation: floatCloudSlow linear infinite;
+            animation: floatCloudFast linear infinite;
             z-index: 0;
         }
 
-        @keyframes floatCloudSlow {
+        @keyframes floatCloudFast {
             0% { transform: translateX(-15%) translateY(0px); }
             50% { transform: translateX(8%) translateY(-15px); }
             100% { transform: translateX(25%) translateY(8px); }
@@ -81,7 +82,7 @@
         }
 
         .title {
-            font-size: 2.8rem;
+            font-size: clamp(2rem, 6vw, 2.8rem);
             font-weight: 700;
             font-family: 'Noto Serif SC', 'Georgia', serif;
             letter-spacing: 3px;
@@ -96,7 +97,7 @@
         }
 
         .question-text {
-            font-size: 1.8rem;
+            font-size: clamp(1.4rem, 5vw, 1.8rem);
             font-weight: 500;
             color: #634828;
             margin: 1.8rem 0 1.5rem;
@@ -118,7 +119,7 @@
             border: 1px solid #f8e8c8;
             border-radius: 60px;
             padding: 15px 24px;
-            font-size: 1.1rem;
+            font-size: clamp(1rem, 3.5vw, 1.1rem);
             font-weight: 500;
             text-align: left;
             color: #5e4022;
@@ -168,7 +169,7 @@
             padding: 14px 28px;
             border-radius: 48px;
             font-weight: 600;
-            font-size: 1.1rem;
+            font-size: clamp(1rem, 3.5vw, 1.1rem);
             color: #402c18;
             cursor: pointer;
             font-family: inherit;
@@ -212,7 +213,7 @@
         }
 
         .magic-word {
-            font-size: 3.8rem;
+            font-size: clamp(2.5rem, 10vw, 3.8rem);
             font-weight: 800;
             font-family: 'Courier New', 'Georgia', monospace;
             letter-spacing: 8px;
@@ -269,9 +270,18 @@
             box-shadow: none;
             color: #806848;
         }
+
+        audio {
+            position: fixed; opacity: 0; pointer-events: none;
+        }
     </style>
 </head>
 <body>
+
+<audio id="bgm" loop autoplay preload="auto">
+    <source src="bgm1.mp3" type="audio/mpeg">
+</audio>
+
 <div class="ambient-field" id="cloudField">
     <div class="field-glow"></div>
 </div>
@@ -296,8 +306,8 @@
             cloud.style.height = h + 'px';
             cloud.style.left = (Math.random() * 100) + '%';
             cloud.style.top = (Math.random() * 85) + '%';
-            const duration = 45 + Math.random() * 50;
-            cloud.style.animation = `floatCloudSlow ${duration}s infinite alternate ease-in-out`;
+            const duration = 12 + Math.random() * 6;
+            cloud.style.animation = `floatCloudFast ${duration}s infinite alternate ease-in-out`;
             cloud.style.animationDelay = (Math.random() * -40) + 's';
             cloud.style.opacity = 0.35 + Math.random() * 0.5;
             cloud.style.background = `radial-gradient(ellipse at 30% 40%, rgba(255,252,225,0.95), rgba(252,240,185,0.6))`;
@@ -308,8 +318,10 @@
     window.addEventListener('load', () => {
         generateSoftClouds();
         window.addEventListener('resize', () => generateSoftClouds());
-        // 初始化渲染
-        render();
+        
+        const audio = document.getElementById('bgm');
+        audio.volume = 0.4;
+        try { audio.play(); } catch(e) {}
     });
 
     const branches = {
@@ -353,8 +365,8 @@
         appContainer.innerHTML = `
             <div style="text-align: center; padding: 20px 0 25px;">
                 <div class="title">PSTI 人格测试</div>
-                <div style="margin: 30px 0 25px;"><button class="action-btn" id="startBtn" style="background:#f5d09a;">◈ 开启 ◈</button></div>
-            </div>
+                              <div style="margin: 30px 0 25px;"><button class="action-btn" id="startBtn" style="background:#f5d09a;">◈ 开启 ◈</button></div>
+                          </div>
         `;
         document.getElementById('startBtn')?.addEventListener('click', () => { 
             state.step = 'q1'; 
@@ -441,30 +453,25 @@
         `;
 
         const nextBtn = document.getElementById('q3NextBtn');
-        const specialNote = document.getElementById('specialNote');
         document.querySelectorAll('.option-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
                 btn.classList.add('selected');
                 
-                const val = btn.dataset.val;
+                let val = btn.dataset.val;
                 state.answers.q3 = val;
-                state.extraNoteQ3 = null;
-                
-                // 特殊提示逻辑
-                if (val === 'deadline') {
-                    state.extraNoteQ3 = '⏰ 别急！deadline会教会我们所有事～';
-                    specialNote.innerText = state.extraNoteQ3;
-                    specialNote.style.display = 'block';
-                } else if (val === 'jiachan') {
-                    state.extraNoteQ3 = '💰 好家伙！这志向我喜欢～';
-                    specialNote.innerText = state.extraNoteQ3;
-                    specialNote.style.display = 'block';
-                } else {
-                    specialNote.style.display = 'none';
-                }
-                
                 nextBtn.disabled = false;
+                
+                let noteText = '';
+                if (val === 'deadline') noteText = '📝 这都敢答？';
+                if (val === 'jiachan') noteText = '🍂 咳咳，注意影响。';
+                
+                if (noteText) {
+                    const noteDiv = document.getElementById('specialNote');
+                    noteDiv.style.display = 'block';
+                    noteDiv.innerText = noteText;
+                    state.extraNoteQ3 = noteText;
+                }
             });
         });
 
@@ -476,11 +483,11 @@
 
     function renderQ4() {
         appContainer.innerHTML = `
-            <div class="question-text">⏳ 需要一台时光机？ ⏳</div>
+            <div class="question-text">⏳ 或许，呃，需要一台时光机？ ⏳</div>
             <div class="options">
-                <button class="option-btn" data-val="past">【回到过去】</button>
-                <button class="option-btn" data-val="present">【停在现在】</button>
-                <button class="option-btn" data-val="future">【去往未来】</button>
+                <button class="option-btn" data-val="past">【那就试试回到过去吧！】</button>
+                <button class="option-btn" data-val="present">【我并不讨厌现在。】</button>
+                <button class="option-btn" data-val="future">【我确实好奇，未来会变好吗？】</button>
             </div>
             <button class="action-btn next-btn" id="q4NextBtn" disabled>下一页 →</button>
         `;
@@ -503,34 +510,33 @@
 
     function renderQ5() {
         appContainer.innerHTML = `
-            <div class="question-text">🔮 PSTI是什么？ 🔮</div>
+            <div class="question-text">🌾 所以 PSTI 是什么？🌾</div>
             <div class="options">
-                <button class="option-btn" data-val="ps">【PS（Photoshop）！】</button>
-                <button class="option-btn" data-val="post">【Post！发帖子！】</button>
-                <button class="option-btn" data-val="sony">【Sony！索尼！】</button>
-                <button class="option-btn" data-val="friend">【Friend！朋友！】</button>
+                <button class="option-btn" data-val="ps">【Photoshop人格测试。】</button>
+                <button class="option-btn" data-val="post">【postscript人格测试。】</button>
+                <button class="option-btn" data-val="sony">【索尼游戏主机人格测试。】</button>
+                <button class="option-btn" data-val="friend">【朋友发我链接我就点进来了......所以是什么？】</button>
             </div>
-            <div id="q5Hint" class="click-hint"></div>
-            <button class="action-btn next-btn" id="q5NextBtn" disabled>进入过渡页 →</button>
+            <div id="q5note" class="click-hint"></div>
+            <button class="action-btn next-btn" id="q5NextBtn" disabled>查看结果 →</button>
         `;
 
         const nextBtn = document.getElementById('q5NextBtn');
-        const q5Hint = document.getElementById('q5Hint');
         document.querySelectorAll('.option-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
                 btn.classList.add('selected');
                 
-                const val = btn.dataset.val;
+                let val = btn.dataset.val;
                 state.answers.q5 = val;
-                
-                // 提示文本
-                if (val === 'ps') q5Hint.innerText = '🎨 原来是修图大师！';
-                else if (val === 'post') q5Hint.innerText = '📝 是分享生活的小可爱～';
-                else if (val === 'sony') q5Hint.innerText = '🎮 索尼大法好！';
-                else if (val === 'friend') q5Hint.innerText = '🤝 是重感情的宝子！';
-                
                 nextBtn.disabled = false;
+                
+                let msg = '';
+                if (val === 'ps') msg = '🎨 设计作业缠上我。';
+                else if (val === 'post') msg = '📜 附注：幽默吗。';
+                else if (val === 'sony') msg = '🎮 手柄借我玩玩。';
+                else if (val === 'friend') msg = '⚠️ 喂，有没有反诈意识啊你！';
+                document.getElementById('q5note').innerText = msg;
             });
         });
 
@@ -543,122 +549,152 @@
     function renderTransition() {
         appContainer.innerHTML = `
             <div class="transition-stage">
-                <div class="magic-word">PSTI</div>
-                <div style="margin-top: 20px; font-size: 1.2rem; color: #82a050;">正在解析你的人格特质...</div>
+                <div id="magicPhrase" class="magic-word">PSTI</div>
+                <div style="margin-top: 35px;"><button class="action-btn gift-btn" id="unfoldGiftBtn">🎁 拆礼物吧 🎁</button></div>
             </div>
-            <button class="action-btn gift-btn" id="unfoldGiftBtn" style="margin-top: 30px;">🎁 点击此处打开礼物 🎁</button>
         `;
+        const magicDiv = document.getElementById('magicPhrase');
+        if (!magicDiv) return;
 
-        // 延迟绑定事件，避免DOM未加载完成
         setTimeout(() => {
-            document.getElementById('unfoldGiftBtn')?.addEventListener('click', () => {
-                state.step = 'gift';
-                render();
-            });
-        }, 100);
+            magicDiv.innerHTML = `<span>P</span><span style="margin:0 8px;">RE</span><span>S</span><span style="margin:0 8px;">EN</span><span>T</span><span>I</span>`;
+            magicDiv.style.letterSpacing = '4px';
+            magicDiv.style.fontSize = '3.6rem';
+            magicDiv.style.transition = 'all 1.2s ease';
+            
+            setTimeout(() => {
+                magicDiv.innerHTML = `<span style="font-weight:900; background:linear-gradient(145deg,#e7b153,#fbd894); background-clip:text; -webkit-background-clip:text; color:transparent;">PRESENT</span>`;
+                magicDiv.style.fontSize = '4rem';
+                magicDiv.style.letterSpacing = '6px';
+                magicDiv.style.textShadow = "0 0 15px #ffe8b0";
+            }, 1500);
+        }, 800);
+
+        document.getElementById('unfoldGiftBtn')?.addEventListener('click', () => {
+            state.step = 'gift';
+            render();
+        });
     }
 
     function renderGift() {
+        const birth = new Date(2004, 3, 27);
+        const now = new Date();
+        
+        let years = now.getFullYear() - birth.getFullYear();
+        let months = now.getMonth() - birth.getMonth();
+        let days = now.getDate() - birth.getDate();
+        let hours = now.getHours() - birth.getHours();
+        let minutes = now.getMinutes() - birth.getMinutes();
+        let seconds = now.getSeconds() - birth.getSeconds();
+
+        if (seconds < 0) { seconds += 60; minutes--; }
+        if (minutes < 0) { minutes += 60; hours--; }
+        if (hours < 0) { hours += 24; days--; }
+        if (days < 0) {
+            months--;
+            days += new Date(now.getFullYear(), now.getMonth(), 0).getDate();
+        }
+        if (months < 0) { months += 12; years--; }
+
+        const timeMagic = `祝${years}岁零${months}个月${days}天${hours}小时${minutes}分${seconds}秒的晓光浮野`;
+        
+        let extraLine = '';
+        if (state.answers.q3 === 'deadline') extraLine = '<br><span style="font-size:0.85rem; color:#c2772e;">还“现在立刻马上帮我完成deadline”，你在向谁求助，syx吗？所托非人啊。</span>';
+        else if (state.answers.q3 === 'jiachan') extraLine = '<br><span style="font-size:0.85rem; color:#c2772e;">祝家产99。</span>';
+
         appContainer.innerHTML = `
             <div class="message-card">
-                <div style="font-size: 2rem; color: #d19648; margin-bottom: 20px;">✨ 你的专属礼物已解锁 ✨</div>
-                <div style="font-size: 1.1rem; color: #634828; line-height: 1.8;">
-                    无论选择如何，你都是独一无二的自己。<br>
-                    愿你永远保持热爱，奔赴山海。
-                </div>
-                <hr>
-                <button class="action-btn" id="finalResultBtn">点击此处进入结果</button>
+                <div style="font-size:2.8rem; margin-bottom:15px;">🎁✨🌿</div>
+                <p style="font-size:1.15rem; font-weight:500; margin-bottom:10px;">我绞尽脑汁想出这份生日礼物，我是不是宇宙第一浪漫？！</p>
+                <p style="margin-bottom:8px;">天南海北，就是一抬腿的距离，那空间不是问题，或许时间也不是？</p>
+                <p style="margin-bottom:8px;">我想啊想啊，我是个擅长做梦的人，那为什么不送你一些梦呢？</p>
+                <p style="font-style:italic; color:#b66f2e; margin:15px 0;">${timeMagic}</p>
+                <p style="font-weight:bold; background:#fef7e5; border-radius:40px; padding:10px; margin:15px 0;">生活着的每一日，都要快乐！${extraLine}</p>
+                <button class="action-btn gift-btn" id="finalResultBtn">◈ 点击此处进入结果 ◈</button>
             </div>
         `;
 
-        document.getElementById('finalResultBtn')?.addEventListener('click', () => {
-            // 分支逻辑计算
-            const { q1, q2, q3, q4, q5 } = state.answers;
-            let branchKey = 'branch2'; // 兜底默认值
+        const finalBtn = document.getElementById('finalResultBtn');
+        finalBtn?.addEventListener('click', () => {
+            const q2 = state.answers.q2;
+            const q3 = state.answers.q3;
+            const q4 = state.answers.q4;
+            let branchKey = null;
 
-            // 核心分支逻辑
             if (q2 === '被爱' && (q3 === 'deadline' || q3 === 'jiachan')) {
                 branchKey = 'branch11';
-            } else if (q4 === 'past') {
+            } 
+            else if (q4 === 'past') {
                 branchKey = 'branch10';
             } else if (q4 === 'future') {
                 branchKey = 'branch11';
-            } else if (q2 === '挣脱') {
-                branchKey = 'branch1';
-            } else if (q2 === '得到') {
-                branchKey = 'branch3';
-            } else if (q2 === '爱') {
-                branchKey = 'branch9';
-            } else if (q3 === '勇气') {
-                branchKey = 'branch5';
-            } else if (q3 === '自由') {
-                branchKey = 'branch6';
-            } else if (q3 === 'passion') {
-                branchKey = 'branch7';
-            } else if (q5 === 'friend') {
-                branchKey = 'branch8';
-            } else if (q1 === 'bad') {
-                branchKey = 'branch4';
-            }
-
-            // 确保分支存在，否则用兜底
-            if (!branches[branchKey]) {
-                branchKey = 'branch2';
+            } else {
+                if (q2 === '挣脱') {
+                    if (q3 === '自由' || q3 === '挣脱') branchKey = 'branch1';
+                    else if (q3 === '勇气') branchKey = 'branch2';
+                    else branchKey = 'branch3';
+                } else if (q2 === '得到') {
+                    if (q3 === '自由') branchKey = 'branch4';
+                    else if (q3 === '勇气') branchKey = 'branch5';
+                    else branchKey = 'branch6';
+                } else if (q2 === '爱') {
+                    if (q3 === '自由') branchKey = 'branch7';
+                    else if (q3 === '勇气') branchKey = 'branch8';
+                    else branchKey = 'branch9';
+                } else {
+                    branchKey = 'branch2';
+                }
             }
 
             state.finalBranchId = branchKey;
-            state.step = 'result';
-            render();
+            if (state.answers.q2 === '被爱') {
+                state.step = 'easterEgg';
+                render();
+            } else {
+                state.step = 'result';
+                render();
+            }
         });
     }
 
     function renderResult() {
         const branch = branches[state.finalBranchId];
-        // 修复未定义变量问题
         const titleStr = branch.title;
         const contentStr = branch.content;
-        
-        appContainer.innerHTML = `
+             appContainer.innerHTML = `
             <div style="text-align:center; padding:10px;">
                 <div style="font-size:2.4rem; font-weight:700; margin-bottom:15px; color:#ba7830;">✨ ${titleStr} ✨</div>
                 <hr>
                 <div style="text-align:left; line-height:1.8; font-size:1.1rem; margin:30px 0; color:#5a4020;">${contentStr}</div>
-                <button class="action-btn" id="restartBtnAgain" style="margin-top:25px;">让我看看还有什么分支结局！</button>
+                             <button class="action-btn" id="restartBtnAgain" style="margin-top:25px;">让我看看还有什么分支结局！</button>
             </div>
         `;
-        
-        // 重新开始按钮事件
         document.getElementById('restartBtnAgain')?.addEventListener('click', () => {
-            // 重置状态
-            state = { 
-                step: 'welcome', 
-                answers: { q1: null, q2: null, q3: null, q4: null, q5: null }, 
-                extraNoteQ3: null, 
-                finalBranchId: null 
-            };
+            state = { step: 'welcome', answers: { q1: null, q2: null, q3: null, q4: null, q5: null }, extraNoteQ3: null, finalBranchId: null };
             render();
-            generateSoftClouds(); // 重新生成云朵
+            generateSoftClouds();
         });
     }
 
-    // 彩蛋页面（备用）
     function renderEasterEgg() {
+        state.step = 'easterEgg';
         appContainer.innerHTML = `
-            <div class="message-card">
-                <div style="font-size: 2rem; color: #82a050; margin-bottom: 20px;">🐣 解锁彩蛋 🐣</div>
-                <div style="font-size: 1.1rem; color: #634828; line-height: 1.8;">
-                    你发现了隐藏的小惊喜！<br>
-                    生活处处有美好，愿你永远保持好奇心～
-                </div>
-                <button class="action-btn" id="backToResultBtn" style="margin-top: 20px;">返回结果页</button>
+            <div class="message-card" style="background:#fffdf0; padding:35px 25px;">
+                <div style="font-size:2.8rem; margin-bottom:15px;">🐶🐱🐰🦊🐨🐯🐸</div>
+                <p style="font-size:1.35rem; font-weight:bold; color:#b5651e; margin-bottom:15px;">此人没有设计【我想被爱】通往的分支结局。</p>
+                <p style="font-size:1.1rem; margin-bottom:10px;">因为爱你的人明明一直在这儿，你怎么会不被爱呢！</p>
+                <p style="font-size:1.1rem; margin-bottom:15px;"><strong>Trick Question 罢了 ❤️</strong></p>
+                <p style="font-family:monospace; margin-bottom:20px;">如有异议，请致电13621776670，我好好说道说道你。</p>
+                <button class="action-btn" id="eggBackBtn" style="margin-top:10px;">让我看看还有什么分支结局！</button>
             </div>
         `;
-
-        document.getElementById('backToResultBtn')?.addEventListener('click', () => {
-            state.step = 'result';
+        document.getElementById('eggBackBtn')?.addEventListener('click', () => {
+            state = { step: 'welcome', answers: { q1: null, q2: null, q3: null, q4: null, q5: null }, extraNoteQ3: null, finalBranchId: null };
             render();
         });
     }
+
+    render();
 </script>
 </body>
 </html>
